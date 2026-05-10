@@ -1,0 +1,97 @@
+services:
+  postgis:
+    #The build:
+    #   Copy the backup
+    #   Copy a script to execute the backup
+    #   Create the user vagrant
+    #   Execute the backup
+    build: postgis
+    restart: unless-stopped
+    env_file:
+      - .env
+      - .env.prod
+    ports:
+      - 127.0.0.1:${GEOMATICAUPV_DOCKER_POSTGIS_FORWARDED_PORT}:5432
+    volumes: 
+      - ./postgis-data:/var/lib/postgresql/data
+
+    #to ckeck if postgres is already ready. It is used in the depends_on section
+    #of the services that use this service.
+    #IMPORTANT. 
+    #   - The user postgres must exist
+    #   - The database postgres must exist, but this is always true,
+    #     despite you create an other one in the POSTGRES_DB variable
+    healthcheck:
+        test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+    networks:
+      - postgis
+
+  pgadmin4:
+    image: dpage/pgadmin4:8.3
+    env_file:
+      - .env
+      - .env.prod
+    volumes:
+      - ./pgadmin4/data:/var/lib/pgadmin
+      - ./pgadmin4/servers/servers.json:/pgadmin4/servers.json
+    ports:
+      - 127.0.0.1:${GEOMATICAUPV_DOCKER_PGADMIN_FORWARDED_PORT}:80
+    restart: unless-stopped
+    depends_on:
+      postgis:
+        condition: service_healthy
+    networks:
+      - postgis
+
+  geoserver:
+    image: docker.osgeo.org/geoserver:2.24.2
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:${GEOMATICAUPV_DOCKER_GEOSERVER_FORWARDED_PORT}:8080
+    env_file:
+        - .env
+        - .env.prod
+    volumes:
+      - ./geoserver-data/geoserver-data:/opt/geoserver_data/:Z
+      - ./geoserver-data/additional_libs:/opt/additional_libs:Z # by mounting this we can install libs from host on startup
+    networks:
+      - postgis
+
+  djangoapi:
+    restart: unless-stopped
+    #the folder of the Django project
+    build: 
+      context: ./djangoapi
+      args:
+        - USER_ID=${DJANGOAPI_USER_ID}
+        - GROUP_ID=${DJANGOAPI_GROUP_ID}
+        - USERNAME=${DJANGOAPI_USERNAME}
+
+    command: gunicorn djangoapi.wsgi:application --bind 0.0.0.0:8000
+#    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./djangoapi:/usr/src/app
+    ports:
+      - 127.0.0.1:${GEOMATICAUPV_DOCKER_DJANGO_API_FORWARDED_PORT}:8000
+    env_file:
+      - .env.prod
+    networks:
+      - postgis
+
+    #to ckeck if postgres is already ready. This service
+    #will not start up to the posgis service is ready
+    depends_on:
+      postgis:
+        condition: service_healthy
+networks:
+   postgis:
+      driver: bridge
+#coment
+volumes:
+  postgis-data:
+    driver: local
+
+#comentario

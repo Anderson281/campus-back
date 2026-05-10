@@ -1,0 +1,19 @@
+{
+    "configurations": [
+      {
+        "name": "DjangoAPI",
+        "type": "debugpy",
+        "request": "attach",
+        "connect": {
+            "host": "127.0.0.1",
+            "port": 6789
+        },
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}/djangoapi",
+            "remoteRoot": "/usr/src/app"
+          }
+        ]
+      }
+    ]
+  }

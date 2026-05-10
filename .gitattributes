@@ -1,0 +1,10 @@
+#Carácter	    Sistema	            Significado	            Problema en Bash
+#LF (\n)	    Linux / macOS	    Line Feed	            Funciona correctamente.
+#CRLF (\r\n)	Windows	            Carriage Return + 
+#                                    Line Feed	            Error: \r se interpreta como comando no encontrado.
+
+# Forzar que todos los archivos de texto se manejen con normalización automática
+* text=auto
+
+# Forzar que los archivos .sh usen SIEMPRE finales de línea LF (Linux)
+*.sh text eol=lf

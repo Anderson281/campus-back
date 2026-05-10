@@ -1,0 +1,30 @@
+# Core
+Django==6.0.1
+djangorestframework
+asgiref
+django-extensions
+
+# Database - EL CAMBIO CLAVE
+psycopg[binary]
+
+# El resto de tus vitales
+django-rest-knox
+drf-access-policy
+django-cors-headers
+django-filter
+django-guardian
+django-allauth[socialaccount]
+django-filter
+drf-spectacular
+
+# Auxiliares
+cryptography
+drf-spectacular
+pillow
+PyYAML
+gunicorn
+django-simple-captcha
+email_validator
+debugpy
+six
+djangorestframework-gis
