@@ -105,3 +105,5 @@ djangoapi/.dotnet
 djangoapi/.vscode-server
 djangoapi/.ash_history
 static_root
+
+docs/
