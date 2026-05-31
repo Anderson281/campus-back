@@ -84,7 +84,7 @@ venv.bak/
 
 ### CUSTOM GITIGNORE ###
 #production variables. --- DANGER ---> Hackers are expecting you to upload your server credentials
-.env.prod
+
 #folder with the postgis data
 postgis-data
 #pgadmin4 data folder for develop environment
