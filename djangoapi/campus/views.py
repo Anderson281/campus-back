@@ -118,3 +118,6 @@ class HelloWorld(View):
             "message": "Hello world",
             "data": []
         })
+    
+# http://127.0.0.1:8001/campus/puntos/select/ (all)
+# http://127.0.0.1:8001/campus/puntos/select/2 (id)

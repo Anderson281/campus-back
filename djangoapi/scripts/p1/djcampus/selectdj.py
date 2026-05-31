@@ -45,3 +45,5 @@ def run(*args):
         print(select_data(tablas[tabla], id_buscado))
     else:
         print("Tabla no valida")
+
+# python manage.py runscript scripts.p1.djcampus.selectdj --script-args poligonos 1
